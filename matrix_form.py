@@ -7,11 +7,10 @@ class SimpleTableInput(tk.Frame):
         self._entry = {}
         self.rows = rows
         self.columns = columns #register a command to use for validation 
-        vcmd = (self.register(self._validate), "%P") #create the table of widgets 
         for row in range(self.rows):
             for column in range(self.columns):
                 index = (row, column)
-                e = tk.Entry(self, validate="key", validatecommand=vcmd)
+                e = tk.Entry(self, validate="key")
                 e.grid(row=row, column=column, stick="nsew")
                 self._entry[index] = e #adjust column weights so they all expand equally 
         for column in range(self.columns):
@@ -45,18 +44,19 @@ class Example(tk.Frame):
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
         self.table = SimpleTableInput(self, 3, 3)
-        self.submit = tk.Button(self, text="Submit", command=self.jordan(self.table.get(), 2, 3))
+        self.submit = tk.Button(self, text="Submit", command=self.jordan)
+        self.label = tk.Label(self, height = "10", width = "50")
+        self.label.pack(side="bottom")
         self.table.pack(side="top", fill="both", expand=True)
         self.submit.pack(side="bottom")
 
-    def on_submit(self):
-        print(self.table.get())
+    def jordan(self):
+        matrix = [[float(column) for column in row] for row in self.table.get()]
+        print(matrix)
 
-    def jordan(self, matrix, row, column):
-        row -= 1
-        column -= 1
+        row = 1
+        column = 2
         temp_matrix = []
-        matrix = [[float(column) for column in row] for row in matrix]
         for i in range(len(matrix)):
             temp_matrix.append([])
             for j in range(len(matrix[i])):
@@ -71,6 +71,7 @@ class Example(tk.Frame):
 
         temp_matrix[row][column] = 1 / matrix[row][column]
 
+        print(temp_matrix)
         return temp_matrix
 
 root = tk.Tk()
